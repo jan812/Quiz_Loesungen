@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rätsel Webseite</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('fbi-background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    button {
+      padding: 15px 30px;
+      margin: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      background-color: #ff6600;
+      color: white;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+    }
+
+    #quizContainer {
+      display: none;
+      margin-top: 50px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 200px;
+    }
+
+    #resultBox {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(0,0,0,0.7);
+      display: inline-block;
+      min-width: 250px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="overlay">
+    <h1>Willkommen zum Rätsel!</h1>
+    <button onclick="startQuiz('heute')">Heutiges Rätsel</button>
+    <button onclick="startQuiz('gestern')">Gestriges Rätsel</button>
+  </div>
+
+  <div id="quizContainer">
+    <h2 id="frage"></h2>
+    <input type="text" id="antwortInput" placeholder="Deine Antwort">
+    <button onclick="checkAntwort()">Überprüfen</button>
+    <div id="resultBox"></div>
+  </div>
+
+  <script>
+    // Rätsel für die Tage vorbereiten
+    const raetsel = {
+      "2025-10-16": { frage: "Rätsel für den 16.10.", loesung: "Test", zahl: 75 },
+      "2025-10-17": { frage: "Rätsel für den 17.10.", loesung: "LMSPHWRBMPB", zahl: 2 },
+      "2025-10-18": { frage: "Rätsel für den 18.10.", loesung: "mission", zahl: 7 },
+      "2025-10-19": { frage: "Rätsel für den 19.10.", loesung: "ERIKA", zahl: 2 },
+      "2025-10-20": { frage: "Rätsel für den 20.10.", loesung: "110", zahl: 6 },
+      "2025-10-21": { frage: "Rätsel für den 21.10.", loesung: "i am human", zahl: 1 },
+      "2025-10-22": { frage: "Rätsel für den 22.10.", loesung: "Timbo", zahl: 8 },
+      "2025-10-23": { frage: "Rätsel für den 23.10.", loesung: "B", zahl: 3 },
+      "2025-10-24": { frage: "Rätsel für den 24.10.", loesung: "i love jan", zahl: 5 },
+      "2025-10-25": { frage: "Rätsel für den 25.10.", loesung: "r=0,82 & h=1,14", zahl: 97 },
+      "2025-10-26": { frage: "Rätsel für den 26.10.", loesung: "CDEFGMVY", zahl: 45 },
+      "2025-10-27": { frage: "Rätsel für den 27.10.", loesung: "SSL", zahl: 9 },
+      "2025-10-28": { frage: "Rätsel für den 28.10.", loesung: "Heilkunst", zahl: 1 },
+      "2025-10-29": { frage: "Rätsel für den 29.10.", loesung: "LMSPHWRBMPB", zahl: 8 },
+      "2025-10-30": { frage: "Rätsel für den 30.10.", loesung: "9", zahl: 4 },
+      "2025-10-31": { frage: "Rätsel für den 31.10.", loesung: "PowerPoint", zahl: 2 },
+      // weitere Tage hier hinzufügen
+    };
+
+    let aktuellesRaetsel = null;
+
+    function startQuiz(tag) {
+      const heute = new Date();
+      let datum;
+
+      if(tag === "heute") {
+        datum = heute.toISOString().split('T')[0];
+      } else if(tag === "gestern") {
+        const gestern = new Date(heute);
+        gestern.setDate(heute.getDate() - 1);
+        datum = gestern.toISOString().split('T')[0];
+      }
+
+      if(raetsel[datum]) {
+        aktuellesRaetsel = raetsel[datum];
+        document.getElementById('frage').innerText = aktuellesRaetsel.frage;
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'block';
+        document.getElementById('resultBox').innerText = "";
+        document.getElementById('antwortInput').value = "";
+      } else {
+        alert("Für dieses Datum gibt es noch kein Rätsel.");
+      }
+    }
+
+    function checkAntwort() {
+      const eingabe = document.getElementById('antwortInput').value.trim();
+      const resultBox = document.getElementById('resultBox');
+
+      if(eingabe === aktuellesRaetsel.loesung) {
+        resultBox.style.backgroundColor = 'rgba(0,128,0,0.8)'; // grün für richtig
+        resultBox.innerText = `Richtig! Die Zahl für heute ist: ${aktuellesRaetsel.zahl}`;
+      } else {
+        resultBox.style.backgroundColor = 'rgba(128,0,0,0.8)'; // rot für falsch
+        resultBox.innerText = "Falsch. Versuche es nochmal.";
+      }
+    }
+  </script>
+
+</body>
+</html>
